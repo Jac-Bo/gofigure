@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/Jac-Bo/gofigure/utils/db"
@@ -29,4 +30,18 @@ func CreateFigure(c *gin.Context) {
 		"figure": figure,
 	})
 
+}
+
+func GetFigures(c *gin.Context) {
+	var figures []figures.AFigure
+	res := db.DB.Find(figures)
+	if res.Error != nil {
+		c.JSON(http.StatusBadGateway, gin.H{
+			"Message": errors.New("Error"),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"Figures: ": figures,
+	})
 }
